@@ -21,7 +21,10 @@ const ScoreTable = (props) => {
         }   
         return e
     })
-
+    var wins = props.wins.map((e) => {
+        e = <td>{e}</td>
+        return e
+    })
     return(
         <div>
             <table>
@@ -31,6 +34,9 @@ const ScoreTable = (props) => {
                     </tr>
                     <tr>
                         {scores}    
+                    </tr>
+                    <tr>
+                        {wins}
                     </tr>
                 </tbody>
             </table>

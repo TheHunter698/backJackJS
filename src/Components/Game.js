@@ -49,7 +49,6 @@ class Game extends Component {
     }
     //PLAYER METHODS -------------------------------------------------------------------------------------------
 
-
     hitMe = () =>{
         var deck = this.state.deck
         var card = deck[Math.floor(Math.random()*deck.length)]
@@ -76,7 +75,14 @@ class Game extends Component {
                     scoresArr[index] += parseInt(card)
                 break;
         }
-
+        if(scoresArr[index] > 21){
+            this.setState({blackJack: 'You are busted!'})
+        }
+        else if(scoresArr[index] == 21){
+            this.setState({blackJack: 'You win the round with a 21!'})
+            this.isWin()
+            this.passRound()
+        }
         this.setState({scores: scoresArr, showCard: 'You got a' + parseInt(card)})
     }
 
@@ -147,8 +153,21 @@ class Game extends Component {
         }
         this.setState({scores: scoresArr}, () => {
             if(scoresArr[playerToEdit] > 21){
+               if(this.state.currentPlayer == 'House'){
+                var winsArr = this.state.wins.map((e, pos) =>{
+                    if(this.state.players.indexOf('House') == pos){
+                        return e
+                    }
+                    else{
+                        e = e+1
+                        return e
+                    }
+                })
+                this.setState({wins: winsArr})
+                
+               }
+               this.passTurn()
                
-               this.passTurn() 
             }
             else if(scoresArr[playerToEdit] === 21){
                 this.isWin() //Insta Round Win
@@ -183,13 +202,16 @@ class Game extends Component {
 
     //Pass to next round because some1 has gotten a 21
     passRound = () => {
-        this.setState({turn: 0, currentPlayer: 'House'})
+        var scoresArr = this.state.scores
+        var newScores = scoresArr.map((e) => e = 0)
+        this.setState({turn: 0, currentPlayer: 'House', scores: newScores})
     }
     //Method to assign a win to a player MUST BE USED WITH A PASSROUND
     isWin = () =>{
         var setWin = this.state.wins
         var index = this.state.players.indexOf(this.state.currentPlayer)
         setWin[index] += 1
+        this.setState({wins: setWin})
     }
     //Check if some1 has 5 wins, that person wins the game
     checkWin = (arr) =>{
@@ -231,7 +253,7 @@ class Game extends Component {
                 this.npcTurn()
                 return(
                     <div>
-                        <ScoreTable currentPlayer = {this.state.currentPlayer} players={this.state.players} scores = {this.state.scores}/>
+                        <ScoreTable currentPlayer = {this.state.currentPlayer} players={this.state.players} scores = {this.state.scores} wins = {this.state.wins}/>
                         <div>
                             {this.state.npcAction}
                         </div>
@@ -244,7 +266,7 @@ class Game extends Component {
         else if(this.state.finishGame == true){
             return(
                 <div>
-                    <ScoreTable currentPlayer = {this.state.currentPlayer} players={this.state.players} scores = {this.state.scores}/>
+                    <ScoreTable currentPlayer = {this.state.currentPlayer} players={this.state.players} scores = {this.state.scores} wins = {this.state.wins}/>
                     <p>The player {this.state.whowins} because he has more than 5 wins!</p>
                     <button onClick={this.props.mainMenu}>Go to main menu</button>
                 </div>
