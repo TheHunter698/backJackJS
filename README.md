@@ -1,6 +1,6 @@
 Welcome to the assignment for Anchormen, this is a fully functional BlackJack game (21 card game) made with JavaScript.
 
-The following libraries are used:
+##The following libraries are used:
 	- Math (Front-end) -> Well you know what this is right?
 	- Mongoose (Back end) -> MongoDB connections
 	- Cors (Back end) -> Authentication, connection permissions
